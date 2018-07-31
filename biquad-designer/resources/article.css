@@ -1,0 +1,162 @@
+
+.article_title,.article_heading {
+  font-weight: bold;
+  color: #004000;
+}
+
+.article_title,.article_title_inverse,.article_subtitle {
+  font-weight: bold;
+  font-size: 200%;
+  padding: 8px;
+  text-align:center;
+}
+
+.article_title_inverse {
+  /* color: #e0e0ff; */
+  color:#004000;
+}
+
+.article_subtitle {
+  font-size:120%;
+  /* color: #2020ff; */
+  color:#004000;
+}
+
+.article_boldtitle {
+font-weight:bold;
+font-size:105%;
+}
+
+.article_subtitle_inverse {
+font-weight: bold;
+text-align:center;
+}
+
+.article_subtopic {
+font-size:110%;
+font-weight:bold;
+}
+
+.article_heading {
+  font-size: 120%;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  display: block;
+  clear:both;
+}
+
+.article_section,.article_section_color_bar {
+  color: #000000;
+  margin-left: 32px;
+  padding-top: 16px;
+}
+
+.article_section_color_bar {
+  border-top: 2px solid #600000;
+}
+
+.article_graphic,.article_graphic_bordered {
+  float: right;
+  padding: 1em;
+  margin: 8px;
+  clear:right;
+}
+
+.article_graphic_bordered {
+  border: 1px solid #000000;
+}
+
+.article_bare_inline_box,.article_inline_box {
+  float: right;
+  clear:right;
+  padding: 16px;
+  margin: 16px;
+  width: 50%;
+}
+
+.article_inline_box {
+  border: 1px solid #000000;
+  background-color: #ffffc0;
+}
+
+.article_shadowed_box {
+  float: right;
+  padding-left:16px;
+  width: 50%;
+}
+
+.article_shadowed_box * {
+  background-color: #ffffc0;
+}
+
+.book_chapter_heading {
+  text-align:center;
+  font-weight: bold;
+  font-size: 200%;
+  padding-bottom: 16px;
+  color: #0000a0;
+}
+
+.message_query,.message_reply {
+  display:block;
+  border: 0px;
+  padding:0;
+  margin-top:8px;
+  margin-bottom:8px;
+}
+
+/* this BR definition solves a difficult problem with
+   line height within quotations */
+
+.message_reply BR, .message_query BR {
+  line-height:11px;
+}
+
+.message_query {
+border:0;
+border-left:3px solid #c0c0c0;
+padding:4px;
+padding-left:4px;
+background-color:#f0f0f0;
+}
+
+.message_reply {
+  /* background-color:#fffff0; */
+}
+
+.quote_block {
+  display:block;
+  border: 1px solid black;
+  background-color:#fffff0;
+  padding:5px;
+  padding-left:10px;
+  margin-top:8px;
+  margin-bottom:8px;
+}
+
+.message_title {
+  font-weight:bold;
+  font-size:120%;
+}
+
+.fancy_quotation {
+  display:block;
+  border: 1px solid #c0c0c0;
+  padding-left:16px;
+  padding-right:16px;
+  margin-top:8px;
+  margin-bottom:8px;
+  margin-left:48px;
+  margin-right:48px;
+  background-color:#fffff0;
+}
+
+table.table_glossary tr td {
+  padding:4px;
+  border: 1px solid #000000;
+}
+
+td.table_title {
+  font-weight: bold;
+  vertical-align: top;
+}

@@ -1,0 +1,23 @@
+@import "common.css";
+
+a, a:hover {
+	text-decoration:underline;
+}
+
+a:visited, a:visited:hover {
+	text-decoration:underline;
+}
+
+.mono li {
+	font-family:monospace;
+}
+
+.pfoot {
+  display:none;
+}
+
+@media print {
+  .pfoot {
+    display:inline;
+  }
+}

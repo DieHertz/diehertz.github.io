@@ -1,0 +1,20 @@
+.dropshadow {
+	background: url(../images/shadowAlpha.png) no-repeat bottom right !important;
+	background: url(../images/shadow.gif) no-repeat bottom right;
+	margin: 10px 0 10px 10px !important;
+	margin: 10px 0 10px 5px;
+}
+
+.dropshadow p,.dropshadow img,.dropshadow span,.dropshadow div {
+        display:block;
+	position:relative;
+	bottom:6px;
+	right: 6px;
+	border: 1px solid #808080;
+	padding:4px;
+	margin: 0px;
+}
+
+.dropshadow p {
+	padding:1em;
+}

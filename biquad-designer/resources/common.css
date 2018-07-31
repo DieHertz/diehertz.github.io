@@ -1,0 +1,391 @@
+html,body,table,select,p,div,span,td,li {
+  font-family: Verdana, Tahoma, Helvetica, Arial;
+  /*font-family: Georgia, serif;*/
+  /* font-family: "Times New Roman", Times, serif;*/
+  font-size: 14px;
+}
+
+@-ms-viewport{
+  width: device-width;
+}
+
+/* a recent change that (of course) doesn't work in MSIE */
+
+.shadow {
+  box-shadow:         5px 5px 5px #ccc;
+  -moz-box-shadow:    5px 5px 5px #ccc;
+  -webkit-box-shadow: 5px 5px 5px #ccc;
+}
+
+.thin_box_shadow {
+  box-shadow: 0px 0px 1px 1px #dda;
+}
+
+select {
+  padding:2px;
+  /* border-radius:4px;
+  -moz-border-radius:4px;
+  -webkit-border-radius:4px; */
+}
+
+/*
+ * This solves the MathJax display size problem
+ * with no other actions required in pages
+ * or CSS configurations
+ */
+
+.MathJax * {
+  font-size:100%;
+}
+
+/* fancy first character in a paragraph */
+
+p.dropcap:first-letter {
+  font-size: 300%;
+  float: left;
+  font-weight: bold;
+  padding-right:4px;
+  color : #800000;
+  
+}
+
+.bigdropcap:first-letter {
+  font-size:500%;
+  float: left;
+  margin-top:-10px;
+  padding-right:10px;
+  font-family:times;
+  color:#800000;
+}
+
+.sidenote {
+  width:40%;
+  float:right;
+  padding:8px;
+  border:1px solid black;
+  background-color:#ffffe0;
+  margin-left:8px;
+}
+
+a {
+  color: #000000;
+}
+
+/* remove the dotted border in firefox */
+
+a:focus {
+  outline-style: none;
+}
+
+a:visited {
+  color: #606060;
+}
+
+a:hover, a:visited:hover {
+  background-color: #eeead5;
+}
+
+a[href*=":"] {
+  padding-right:13px;
+}
+
+a[href*=":"]:visited {
+}
+
+/* color assignment for headings */
+
+.headcolor,.headline {
+  color: #004444;
+}
+
+.headline {
+  font-size:110%;
+}
+
+/* color assignment for expanding lists */
+
+
+div a,div a:visited {
+  /* this solves an MSIE bug */
+  padding-top:0;
+}
+
+/* color assignment for list dots */
+
+.listdot {
+  color: #800000;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+select,input,textarea {
+  border: 1px solid black;
+}
+
+.calc_cell {
+  padding-left: 3px;
+  padding-right: 3px;
+  margin-left: 4px;
+  margin-right: 4px;
+  text-align: right;
+  font-family: monospace;
+  border:1px solid gray;
+}
+
+.calc_cell[value*="-"] {
+  color: red;
+}
+
+input.button,input.narrow_button {
+  border:#c0c0c0;
+  background: #c0c0c0;
+  border-style: solid;
+  border-width: 3px;
+  cursor: pointer;
+}
+
+input.button:hover,input.narrow_button:hover {
+  border-style: outset;
+  border-width: 3px;
+}
+
+input.button:active,input.narrow_button:active {
+  border-style: inset;
+  border-width: 3px;
+}
+
+input.button {
+  width:100%;
+}
+
+.noborder {
+  border: none;
+}
+
+.hline,.green_hline,.purple_hline,.brown_hline {
+  padding:0;
+  margin:0;
+  overflow:hidden;
+  width: 95%;
+  height:2px;
+  clear: both;
+}
+
+.green_hline {
+  background-color: #004444;
+}
+
+.purple_hline {
+  background-color: #660099;
+}
+
+.brown_hline {
+  background-color: #600000;
+}
+
+/* force PRE tag content to be monospaced */
+
+pre * {
+  font-family:monospace;
+}
+
+table td.table_title {
+  font-weight:bold;
+  text-align:center;
+}
+
+table td.table_left_col {
+  font-weight:bold;
+}
+
+/* use "th" to designate cells in top row */
+
+table.colored tr th {
+  background-color:#b2e0b4;
+  text-align:center;
+}
+
+table.colored tr td {
+  background-color:#fbfceb;
+  text-align:right;
+}
+
+/* just the colors, no formatting */
+
+table.present tr th {
+  background-color:#b2e0b4;
+}
+
+table.present tr td {
+  background-color:#fbfceb;
+}
+
+/* a pretty box for a side note */
+
+.sidebox {
+  width:50%;
+  float:right;
+  padding:8px;
+  border:1px solid black;
+  background-color:#ffffe0;
+  margin-left:8px;
+  margin-top:8px;
+  margin-bottom:8px;
+}
+
+.revisionlist * {
+  font-family:monospace;
+}
+
+
+/* hacks to deal with MSIE bugs */
+
+table.bordered,table.bordered td,table.bordered th { border: 1px solid #000000; }
+
+table.outlined { border: 1px solid #000000; }
+
+/* set this default for MSIE, it should be overridden on a cell-by-cell basis */
+
+td { text-align: left; }
+
+/* another pretty table */
+
+table.decorated {
+  border: 1px solid #000000;
+  background-color:#fbfceb;
+}
+
+table.decorated tr th {
+  text-align:center;
+  background:#b2e0b4;
+  border: 1px solid #000000;
+  padding:4px;
+}
+
+table.decorated tr td {
+  border: 1px solid #000000;
+  padding:4px;
+}
+
+table.decorated tr td img {
+  vertical-align:middle;
+}
+
+.column_layout {
+  column-count: 2;
+  column-gap: 20px;
+  -moz-column-count: 2;
+  -moz-column-gap: 20px;
+  -webkit-column-count: 2;
+  -webkit-column-gap: 20px;
+  text-align:justify;
+}
+
+.fill_justify {
+  text-align:justify;
+}
+
+/* a way to embed a footnote with the text in a span tag's title field */
+
+.hovernote {
+  background: url(../images/dialog-information.png) no-repeat;
+  padding-left:22px;
+  padding-top:4px;
+  line-height:30px;
+  vertical-align:bottom;
+  cursor: pointer;
+}
+
+.tintedbox {
+  border:1px solid black;
+  background:#ffffe8;
+  padding:8px;
+  /* border-radius:4px;
+  -moz-border-radius:4px;
+  -webkit-border-radius:4px; */
+}
+
+.rounded_corners {
+  /* padding:16px;
+  border-radius:8px;
+  -moz-border-radius:8px;
+  -webkit-border-radius:8px; */
+}
+
+/* pretty display box at right side, 40% width */
+
+.rightbox {
+  float:right;
+  width:40%;
+  border:1px solid black;
+  background:#ffffe8;
+  padding:8px;
+  margin-left:8px;
+  /* border-radius:4px;
+  -moz-border-radius:4px;
+  -webkit-border-radius:4px; */
+  -moz-box-shadow:    5px 5px 5px #ccc;
+  -webkit-box-shadow: 5px 5px 5px #ccc;
+  box-shadow: 5px 5px 5px #ccc;
+  margin-bottom:12px;
+}
+
+/* a pretty bordered frame for graphics and canvases */
+
+.graphic_frame {
+  display:block;
+  border:1px solid black;
+  padding:8px;
+  margin-left:8px;
+  /* border-radius:4px;
+  -moz-border-radius:4px;
+  -webkit-border-radius:4px; */
+  box-shadow: 5px 5px 5px #ccc;
+  -moz-box-shadow:    5px 5px 5px #ccc;
+  -webkit-box-shadow: 5px 5px 5px #ccc;
+  margin-bottom:12px;
+}
+
+.footnote {
+  cursor:pointer;
+  cursor:hand;
+}
+
+.makebreak {
+  page-break-before:always;
+}
+
+.block-indent {
+  margin-top:1em;
+  margin-bottom:1em;
+  margin-left:2em;
+}
+
+/* a way to make ordinary text look somewhat like mathJax renderings */
+
+.mathfont {
+  font-family:TimesRoman;
+  font-style:italic;
+  font-size:140%;
+}
+
+.codeblock {
+  background:#f0f0f0;
+  padding:8px;
+}
+
+.monoprint * {
+  font-family:monospace;
+}
+
+/* a simple way to add a floating footnote
+* using the tag's title field to hold the text */
+
+.hover-footnote {
+  text-decoration:underline;
+  color:#4080ff;
+  cursor:pointer;
+  cursor:hand;
+}

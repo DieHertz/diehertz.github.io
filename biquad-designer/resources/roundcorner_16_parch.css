@@ -1,0 +1,15 @@
+.roundcorner_16_parch_content {
+  padding-right:16px;
+  padding-left:16px;
+  display:block;
+  background-color: #ffffff;
+  padding-top:16px;
+  padding-bottom:16px;
+  padding-left:24px;
+  padding-right:24px;
+  box-shadow: 0px 0px 1px 1px #dda;
+  /* border:1px solid #c0c0c0; */
+  /* border-radius:8pt;
+  -moz-border-radius:8pt;
+  -webkit-border-radius:8pt; */
+}
