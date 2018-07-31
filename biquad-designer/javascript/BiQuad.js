@@ -331,14 +331,14 @@ BiQuad.drawAmplitude = function(e) {
   var element = 'amplitude'
 
   // get vertical scale limits and create y data array
-  var ydata = [];
+  BiQuad[element].ydata = [];
   BiQuad[element].miny = 1e9;
   BiQuad[element].maxy = -1e9;
   for(var i = 0;i < BiQuad.samples;i++) {
     var ix = BiQuad.convertLogScale(i,0,BiQuad.samples,BiQuad.horizLogScale);
     var f = BiQuad.interp(ix,0,BiQuad.samples,0,BiQuadFilter.sample_rate / 2);
     var amplitude = BiQuad.amplitude.get(f);
-    ydata.push(amplitude);
+    BiQuad[element].ydata.push(amplitude);
     BiQuad[element].miny = Math.min(amplitude, BiQuad[element].miny);
     BiQuad[element].maxy = Math.max(amplitude, BiQuad[element].maxy); 
   }
@@ -360,7 +360,7 @@ BiQuad.drawAmplitude = function(e) {
   for(var i = 0;i < BiQuad.samples;i++) {
     //var x = BiQuad.interp(i,0,BiQuad.samples,0,BiQuadFilter.frequency() * 2);
     var px = BiQuad.interp(i,0,BiQuad.samples,BiQuad.graph_dims.xl,BiQuad.graph_dims.xh);
-    var y = ydata[i];
+    var y = BiQuad[element].ydata[i];
     var py = BiQuad.interp(y,BiQuad[element].miny,BiQuad[element].maxy,BiQuad.graph_dims.yh,BiQuad.graph_dims.yl);
     px = parseInt(px+0.5);
     py = parseInt(py+0.5);
@@ -381,7 +381,8 @@ BiQuad.drawPhase = function() {
   var element = 'phase';
 
   // get vertical scale limits and create y data array
-  var ydata = [];
+  BiQuad[element].ydata = [];
+  BiQuad[element].add = [];
   BiQuad[element].miny = 1e9;
   BiQuad[element].maxy = -1e9;
   var prevPhase;
@@ -400,7 +401,8 @@ BiQuad.drawPhase = function() {
     }
     prevPhase = phase;
 
-    ydata.push(phase);
+    BiQuad[element].ydata.push(phase);
+    BiQuad[element].add.push(add);
     BiQuad[element].miny = Math.min(phase, BiQuad[element].miny);
     BiQuad[element].maxy = Math.max(phase, BiQuad[element].maxy);
 
@@ -422,7 +424,7 @@ BiQuad.drawPhase = function() {
   for(var i = 0;i < BiQuad.samples;i++) {
     //var x = BiQuad.interp(i,0,BiQuad.samples,0,BiQuadFilter.frequency() * 2);
     var px = BiQuad.interp(i,0,BiQuad.samples,BiQuad.graph_dims.xl,BiQuad.graph_dims.xh);
-    var y = ydata[i];
+    var y = BiQuad[element].ydata[i];
     var py = BiQuad.interp(y,BiQuad[element].miny,BiQuad[element].maxy,BiQuad.graph_dims.yh,BiQuad.graph_dims.yl);
     px = parseInt(px+0.5);
     py = parseInt(py+0.5);
@@ -450,13 +452,19 @@ BiQuad.manageMouse = function(element, evt) {
   var px = evt.clientX;
   var ix = BiQuad.convertLogScale(px,rect.left,rect.right,BiQuad.horizLogScale);
   var f = BiQuad.interp(ix,rect.left,rect.right,0,BiQuadFilter.sample_rate / 2)
-  var y = BiQuad[element].get(f);
+  var add = 0;
+  if (element === 'phase') {
+    var index = Math.round(2 * f * BiQuad.samples / BiQuadFilter.sample_rate);
+    add = BiQuad[element].add[index];
+  }
+
+  var y = BiQuad[element].get(f) + add;
   var py = BiQuad.interp(y,BiQuad[element].miny,BiQuad[element].maxy,BiQuad.graph_dims.yh,BiQuad.graph_dims.yl);
   py +=  BiQuad[element].canvas.offsetTop - 6;
   px -= 4;
   BiQuad.eraseMouseDiv();
   BiQuad.mouseDiv = document.createElement('div');
-  y = BiQuad[element].getRaw(f);
+  y = BiQuad[element].getRaw(f) + add;
 
   BiQuad.mouseDiv.style = "font-family:monospace;font-size:80%;background:rgba(255,255,255,.85);user-select:none;pointer-events:none;text-align:left;position:absolute;top:" + py + "px;left:" + px + "px;";
 
