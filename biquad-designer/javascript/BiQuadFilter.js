@@ -182,9 +182,18 @@ BiQuadFilter.phase = function(f) {
   var sin = Math.sin(omega);
   var sin2 = Math.sin(2 * omega);
 
-  var denom = 1 + Math.pow(a1, 2) + Math.pow(a2, 2) + 2 * (a1 + a1 * a2) * cos + a2 * cos2;
-  var real  = (b0 * a1 + b1 + b1 * a2 + b2 * a1) * cos + (b0 * a2 + b2) * cos2 + (b0 + b1 * a1 + b2 * a2);
-  var img   = (b0 * a1 - b1 + b1 * a2 - b2 * a1) * sin + (b0 * a2 - b2) * sin2;
+  var a = b0 + b1 * cos + b2 * cos2;
+  var b = -(b1 * sin + b2 * sin2);
+  var c = 1 + a1 * cos + a2 * cos2;
+  var d = -(a1 * sin + a2 * sin2);
+  var denom = c*c + d*d;
+  var real = a*c + b*d;
+  var img = b*c - a*d;
+
+  // var denom = 1 + Math.pow(a1, 2) + Math.pow(a2, 2) + 2 * (a1 + a1 * a2) * cos + a2 * cos2;
+  // var real  = (b0 * a1 + b1 + b1 * a2 + b2 * a1) * cos + (b0 * a2 + b2) * cos2 + (b0 + b1 * a1 + b2 * a2);
+  // var img   = (b0 * a1 - b1 + b1 * a2 - b2 * a1) * sin + (b0 * a2 - b2) * sin2;
+
 
   var arg = Math.atan2(img / denom, real / denom);
 
