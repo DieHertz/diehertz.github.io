@@ -382,56 +382,38 @@ BiQuad.drawPhase = function() {
 
   // get vertical scale limits and create y data array
   BiQuad[element].ydata = [];
-  BiQuad[element].add = [];
   BiQuad[element].miny = 1e9;
   BiQuad[element].maxy = -1e9;
-  var prevPhase;
-  var add = 0;
-  var gotCenterFreq = false;
 
   for(var i = 0; i < BiQuad.samples; i++) {
     var ix = BiQuad.convertLogScale(i, 0, BiQuad.samples, BiQuad.horizLogScale);
     var f = BiQuad.interp(ix, 0, BiQuad.samples, 0, BiQuadFilter.sample_rate / 2);
-    var phase = BiQuad.getPhase(f) + add;
-
-    // deal with rollover
-    if (Math.abs(phase - prevPhase) > Math.PI / 2) {
-      add -= Math.PI;
-      phase -= Math.PI;
-    }
-    prevPhase = phase;
+    var phase = BiQuad.getPhase(f);
 
     BiQuad[element].ydata.push(phase);
-    BiQuad[element].add.push(add);
     BiQuad[element].miny = Math.min(phase, BiQuad[element].miny);
     BiQuad[element].maxy = Math.max(phase, BiQuad[element].maxy);
-
-    // must acquire this exact point also
-    // for maxy, miny only
-    if (!gotCenterFreq && Math.abs(f - BiQuadFilter.center_freq) * BiQuadFilter.sample_rate < 2) {
-      var centerPhase = BiQuad.getPhase(BiQuadFilter.center_freq) + add;
-      BiQuad[element].miny = Math.min(centerPhase, BiQuad[element].miny);
-      BiQuad[element].maxy = Math.max(centerPhase, BiQuad[element].maxy);
-
-      gotCenterFreq = true;
-    }
   }
+
+  // must acquire this exact point also
+  // for maxy, miny only
+  var centerPhase = BiQuad.getPhase(BiQuadFilter.center_freq);
+  BiQuad[element].miny = Math.min(centerPhase, BiQuad[element].miny);
+  BiQuad[element].maxy = Math.max(centerPhase, BiQuad[element].maxy);
 
   BiQuad.phase.canvas_ctx.clearRect(0, 0, BiQuad.phase.canvas.width, BiQuad.phase.canvas.height);
   BiQuad.plot_grid(element, BiQuad[element].miny, BiQuad[element].maxy);
   BiQuad.phase.canvas_ctx.strokeStyle = BiQuad.plot_color;
   BiQuad.phase.canvas_ctx.beginPath();
-  for(var i = 0;i < BiQuad.samples;i++) {
-    //var x = BiQuad.interp(i,0,BiQuad.samples,0,BiQuadFilter.frequency() * 2);
+  for(var i = 0; i < BiQuad.samples;i++) {
     var px = BiQuad.interp(i,0,BiQuad.samples,BiQuad.graph_dims.xl,BiQuad.graph_dims.xh);
     var y = BiQuad[element].ydata[i];
     var py = BiQuad.interp(y,BiQuad[element].miny,BiQuad[element].maxy,BiQuad.graph_dims.yh,BiQuad.graph_dims.yl);
     px = parseInt(px+0.5);
     py = parseInt(py+0.5);
-    if(i == 0) {
+    if (i < 2) {
       BiQuad.phase.canvas_ctx.moveTo(px,py);
-    }
-    else {
+    } else {
       BiQuad.phase.canvas_ctx.lineTo(px,py);
     }
   }
@@ -452,19 +434,14 @@ BiQuad.manageMouse = function(element, evt) {
   var px = evt.clientX;
   var ix = BiQuad.convertLogScale(px,rect.left,rect.right,BiQuad.horizLogScale);
   var f = BiQuad.interp(ix,rect.left,rect.right,0,BiQuadFilter.sample_rate / 2)
-  var add = 0;
-  if (element === 'phase') {
-    var index = Math.round(2 * f * BiQuad.samples / BiQuadFilter.sample_rate);
-    add = BiQuad[element].add[index];
-  }
 
-  var y = BiQuad[element].get(f) + add;
+  var y = BiQuad[element].get(f);
   var py = BiQuad.interp(y,BiQuad[element].miny,BiQuad[element].maxy,BiQuad.graph_dims.yh,BiQuad.graph_dims.yl);
   py +=  BiQuad[element].canvas.offsetTop - 6;
   px -= 4;
   BiQuad.eraseMouseDiv();
   BiQuad.mouseDiv = document.createElement('div');
-  y = BiQuad[element].getRaw(f) + add;
+  y = BiQuad[element].getRaw(f);
 
   BiQuad.mouseDiv.style = "font-family:monospace;font-size:80%;background:rgba(255,255,255,.85);user-select:none;pointer-events:none;text-align:left;position:absolute;top:" + py + "px;left:" + px + "px;";
 
