@@ -242,7 +242,7 @@ BiQuad.plot_grid = function(element, miny, maxy) {
     BiQuad.draw_line(e.canvas_ctx, px,BiQuad.graph_dims.yl,px,BiQuad.graph_dims.yh);
     var ix = BiQuad.convertLogScale(x,0,BiQuad.xSteps,BiQuad.horizLogScale);
     var xindex = BiQuadFilter.sample_rate * .5 * ix/ BiQuad.xSteps;
-    var s = xindex.toFixed(1);
+    var s = Math.round(xindex);
     var div = document.createElement('div');
     var pct = 100.0/(BiQuad.xSteps+1);
     div.style.width = pct.toFixed(2) + "%";
@@ -257,6 +257,9 @@ BiQuad.plot_grid = function(element, miny, maxy) {
     BiQuad.draw_line(e.canvas_ctx, BiQuad.graph_dims.xl,py,BiQuad.graph_dims.xh,py);
     var yindex = BiQuad.interp(y,0,BiQuad.ySteps,maxy,miny);
     var s = yindex.toFixed(1);
+    if (element === 'phase') {
+      s = Math.round(yindex * 180 / Math.PI);
+    }
     var div = document.createElement('div');
     var pct = 100.0/BiQuad.ySteps;
     div.style.height = pct.toFixed(2) + "%";
