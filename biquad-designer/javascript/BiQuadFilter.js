@@ -106,11 +106,11 @@ BiQuadFilter.reconfigure = function(cf) {
 }
 
 BiQuadFilter.f_pt1 = function(gain_abs,omega,sn,cs,alpha,beta) {
-  BiQuadFilter.b0 = omega;
-  BiQuadFilter.b1 = omega;
+  BiQuadFilter.b0 = sn;
+  BiQuadFilter.b1 = sn;
   BiQuadFilter.b2 = 0;
-  BiQuadFilter.a0 = 2 + omega;
-  BiQuadFilter.a1 = omega - 2;
+  BiQuadFilter.a0 = sn + cs + 1;
+  BiQuadFilter.a1 = sn - cs - 1;
   BiQuadFilter.a2 = 0;
 }
 
