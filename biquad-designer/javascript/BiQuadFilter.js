@@ -132,7 +132,7 @@ BiQuadFilter.f_cont_lowpass2 = function(gain_abs,omega,sn,cs,alpha,beta) {
   BiQuadFilter.b1 = 0;
   BiQuadFilter.b2 = 0;
   BiQuadFilter.a0 = w_c * w_c;
-  BiQuadFilter.a1 = BiQuadFilter.Q * w_c;
+  BiQuadFilter.a1 = 2 * BiQuadFilter.Q * w_c;
   BiQuadFilter.a2 = 1;
 }
 
