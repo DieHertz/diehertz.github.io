@@ -28,6 +28,8 @@ BiQuadFilter.PEAK = 4;
 BiQuadFilter.NOTCH = 5;
 BiQuadFilter.LOWSHELF = 6;
 BiQuadFilter.HIGHSHELF = 7;
+BiQuadFilter.CONT_1ST_LOWPASS = 8;
+BiQuadFilter.CONT_2ND_LOWPASS = 9;
 
 BiQuadFilter.a0 = 0;
 BiQuadFilter.a1 = 0;
@@ -66,12 +68,17 @@ BiQuadFilter.configure = function(type,center_freq,sample_rate, Q, gainDB) {
   BiQuadFilter.f_peak,
   BiQuadFilter.f_notch,
   BiQuadFilter.f_lowshelf,
-  BiQuadFilter.f_highshelf
+  BiQuadFilter.f_highshelf,
+  BiQuadFilter.f_cont_lowpass1,
+  BiQuadFilter.f_cont_lowpass2
   ];
   BiQuadFilter.reset();
   BiQuadFilter.Q = (Q == 0) ? 1e-9 : Q;
   BiQuadFilter.type = type;
   BiQuadFilter.sample_rate = sample_rate;
+  if (BiQuadFilter.type == BiQuadFilter.CONT_1ST_LOWPASS || BiQuadFilter.type == BiQuadFilter.CONT_2ND_LOWPASS) {
+    BiQuadFilter.sample_rate *= 2;
+  }
   BiQuadFilter.gainDB = gainDB;
   BiQuadFilter.reconfigure(center_freq);
 }
@@ -99,14 +106,35 @@ BiQuadFilter.reconfigure = function(cf) {
 }
 
 BiQuadFilter.f_pt1 = function(gain_abs,omega,sn,cs,alpha,beta) {
-  BiQuadFilter.b0 = 1;
-  BiQuadFilter.b1 = 1;
+  BiQuadFilter.b0 = omega;
+  BiQuadFilter.b1 = omega;
   BiQuadFilter.b2 = 0;
-  BiQuadFilter.a0 = 2 * omega + 1;
-  BiQuadFilter.a1 = 1 - 2 * omega;
+  BiQuadFilter.a0 = 2 + omega;
+  BiQuadFilter.a1 = omega - 2;
   BiQuadFilter.a2 = 0;
 }
 
+BiQuadFilter.f_cont_lowpass1 = function(gain_abs,omega,sn,cs,alpha,beta) {
+  var w_c = 2 * Math.PI * BiQuadFilter.center_freq;
+
+  BiQuadFilter.b0 = w_c;
+  BiQuadFilter.b1 = 0;
+  BiQuadFilter.b2 = 0;
+  BiQuadFilter.a0 = w_c;
+  BiQuadFilter.a1 = 1;
+  BiQuadFilter.a2 = 0;
+}
+
+BiQuadFilter.f_cont_lowpass2 = function(gain_abs,omega,sn,cs,alpha,beta) {
+  var w_c = 2 * Math.PI * BiQuadFilter.center_freq;
+
+  BiQuadFilter.b0 = w_c * w_c;
+  BiQuadFilter.b1 = 0;
+  BiQuadFilter.b2 = 0;
+  BiQuadFilter.a0 = w_c * w_c;
+  BiQuadFilter.a1 = BiQuadFilter.Q * w_c;
+  BiQuadFilter.a2 = 1;
+}
 
 BiQuadFilter.f_bandpass = function(center_freq,gain_abs,omega,sn,cs,alpha,beta) {
   BiQuadFilter.b0 = alpha;
@@ -173,33 +201,71 @@ BiQuadFilter.f_highshelf = function(gain_abs,omega,sn,cs,alpha,beta) {
 
 // provide a static amplitude result for testing
 BiQuadFilter.amplitude = function(f) {
-  var phi = Math.pow((Math.sin(2.0 * Math.PI * f / (2.0 * BiQuadFilter.sample_rate))), 2.0);
-  var r = (Math.pow(BiQuadFilter.b0 + BiQuadFilter.b1 + BiQuadFilter.b2, 2.0) - 4.0 * (BiQuadFilter.b0 * BiQuadFilter.b1 + 4.0 * BiQuadFilter.b0 * BiQuadFilter.b2 + BiQuadFilter.b1 * BiQuadFilter.b2) * phi + 16.0 * BiQuadFilter.b0 * BiQuadFilter.b2 * phi * phi) / (Math.pow(1.0 + BiQuadFilter.a1 + BiQuadFilter.a2, 2.0) - 4.0 * (BiQuadFilter.a1 + 4.0 * BiQuadFilter.a2 + BiQuadFilter.a1 * BiQuadFilter.a2) * phi + 16.0 * BiQuadFilter.a2 * phi * phi);
-  r = (r < 0)?0:r;
-  return Math.sqrt(r);
-}
-
-BiQuadFilter.phase = function(f) {
-  var omega = 2 * Math.PI * f / BiQuadFilter.sample_rate;
-
   var b0 = BiQuadFilter.b0;
   var b1 = BiQuadFilter.b1;
   var b2 = BiQuadFilter.b2;
   var a1 = BiQuadFilter.a1;
   var a2 = BiQuadFilter.a2;
 
-  var cos = Math.cos(omega);
-  var cos2 = Math.cos(2 * omega);
-  var sin = Math.sin(omega);
-  var sin2 = Math.sin(2 * omega);
+  if (BiQuadFilter.type == BiQuadFilter.CONT_1ST_LOWPASS || BiQuadFilter.type == BiQuadFilter.CONT_2ND_LOWPASS) {
+    var w = 2 * Math.PI * f;
 
-  var denom = 1 + Math.pow(a1, 2) + Math.pow(a2, 2) + 2 * a1 * cos + 2 * a2 * cos2 + 2 * a1 * a2 * cos;
-  var real  = (b0 * a1 + b1 + b1 * a2 + b2 * a1) * cos + (b0 * a2 + b2) * cos2 + (b0 + b1 * a1 + b2 * a2);
-  var img   = (b0 * a1 - b1 + b1 * a2 - b2 * a1) * sin + (b0 * a2 - b2) * sin2;
+    var a = b0 - b2 * w * w;
+    var b = b1 * w;
+    var c = 1 - a2 * w * w;
+    var d = a1 * w;
 
-  var arg = Math.atan2(img / denom, real / denom);
+    var denom = c * c + d * d;
+    var real = (a * c + b * d) / denom;
+    var img = (b * c - a * d) / denom;
 
-  return arg;
+    return Math.sqrt(real * real + img * img);
+  } else {
+    var phi = Math.pow((Math.sin(2.0 * Math.PI * f / (2.0 * BiQuadFilter.sample_rate))), 2.0);
+    var r = (Math.pow(b0 + b1 + b2, 2.0) - 4.0 * (b0 * b1 + 4.0 * b0 * b2 + b1 * b2) * phi + 16.0 * b0 * b2 * phi * phi) / (Math.pow(1.0 + a1 + a2, 2.0) - 4.0 * (a1 + 4.0 * a2 + a1 * a2) * phi + 16.0 * a2 * phi * phi);
+    r = (r < 0)?0:r;
+    return Math.sqrt(r);
+  }
+}
+
+BiQuadFilter.phase = function(f) {
+  var b0 = BiQuadFilter.b0;
+  var b1 = BiQuadFilter.b1;
+  var b2 = BiQuadFilter.b2;
+  var a1 = BiQuadFilter.a1;
+  var a2 = BiQuadFilter.a2;
+
+  if (BiQuadFilter.type == BiQuadFilter.CONT_1ST_LOWPASS || BiQuadFilter.type == BiQuadFilter.CONT_2ND_LOWPASS) {
+    var w = 2 * Math.PI * f;
+
+    var a = b0 - b2 * w * w;
+    var b = b1 * w;
+    var c = 1 - a2 * w * w;
+    var d = a1 * w;
+
+    var denom = c * c + d * d;
+    var real = (a * c + b * d) / denom;
+    var img = (b * c - a * d) / denom;
+
+    var arg = Math.atan2(img, real);
+
+    return arg;
+  } else {
+    var omega = 2 * Math.PI * f / BiQuadFilter.sample_rate;
+
+    var cos = Math.cos(omega);
+    var cos2 = Math.cos(2 * omega);
+    var sin = Math.sin(omega);
+    var sin2 = Math.sin(2 * omega);
+
+    var denom = 1 + Math.pow(a1, 2) + Math.pow(a2, 2) + 2 * a1 * cos + 2 * a2 * cos2 + 2 * a1 * a2 * cos;
+    var real  = (b0 * a1 + b1 + b1 * a2 + b2 * a1) * cos + (b0 * a2 + b2) * cos2 + (b0 + b1 * a1 + b2 * a2);
+    var img   = (b0 * a1 - b1 + b1 * a2 - b2 * a1) * sin + (b0 * a2 - b2) * sin2;
+
+    var arg = Math.atan2(img / denom, real / denom);
+
+    return arg;
+  }
 }
 
 // provide a static decibel result for testing
