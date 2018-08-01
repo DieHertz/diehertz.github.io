@@ -20,13 +20,14 @@
 var BiQuadFilter = BiQuadFilter || {}
 
 
-BiQuadFilter.LOWPASS = 0;
-BiQuadFilter.HIGHPASS = 1;
-BiQuadFilter.BANDPASS = 2;
-BiQuadFilter.PEAK = 3;
-BiQuadFilter.NOTCH = 4;
-BiQuadFilter.LOWSHELF = 5;
-BiQuadFilter.HIGHSHELF = 6;
+BiQuadFilter.PT1 = 0;
+BiQuadFilter.LOWPASS = 1;
+BiQuadFilter.HIGHPASS = 2;
+BiQuadFilter.BANDPASS = 3;
+BiQuadFilter.PEAK = 4;
+BiQuadFilter.NOTCH = 5;
+BiQuadFilter.LOWSHELF = 6;
+BiQuadFilter.HIGHSHELF = 7;
 
 BiQuadFilter.a0 = 0;
 BiQuadFilter.a1 = 0;
@@ -58,6 +59,7 @@ BiQuadFilter.frequency = function() {
 
 BiQuadFilter.configure = function(type,center_freq,sample_rate, Q, gainDB) {
   BiQuadFilter.functions = [
+  BiQuadFilter.f_pt1,
   BiQuadFilter.f_lowpass,
   BiQuadFilter.f_highpass,
   BiQuadFilter.f_bandpass,
@@ -96,7 +98,19 @@ BiQuadFilter.reconfigure = function(cf) {
   BiQuadFilter.a2 /= BiQuadFilter.a0;
 }
 
-BiQuadFilter.f_bandpass = function(gain_abs,omega,sn,cs,alpha,beta) {
+BiQuadFilter.f_pt1 = function(gain_abs,omega,sn,cs,alpha,beta) {
+  var k = 1 / (1 + omega);
+
+  BiQuadFilter.b0 = k;
+  BiQuadFilter.b1 = 0;
+  BiQuadFilter.b2 = 0;
+  BiQuadFilter.a0 = 1;
+  BiQuadFilter.a1 = k - 1;
+  BiQuadFilter.a2 = 0;
+}
+
+
+BiQuadFilter.f_bandpass = function(center_freq,gain_abs,omega,sn,cs,alpha,beta) {
   BiQuadFilter.b0 = alpha;
   BiQuadFilter.b1 = 0;
   BiQuadFilter.b2 = -alpha;
@@ -168,7 +182,6 @@ BiQuadFilter.amplitude = function(f) {
 }
 
 BiQuadFilter.phase = function(f) {
-  var phi = Math.pow(Math.sin(2 * Math.PI * f / (2 * BiQuadFilter.sample_rate)), 2);
   var omega = 2 * Math.PI * f / BiQuadFilter.sample_rate;
 
   var b0 = BiQuadFilter.b0;
@@ -182,18 +195,9 @@ BiQuadFilter.phase = function(f) {
   var sin = Math.sin(omega);
   var sin2 = Math.sin(2 * omega);
 
-  var a = b0 + b1 * cos + b2 * cos2;
-  var b = -(b1 * sin + b2 * sin2);
-  var c = 1 + a1 * cos + a2 * cos2;
-  var d = -(a1 * sin + a2 * sin2);
-  var denom = c*c + d*d;
-  var real = a*c + b*d;
-  var img = b*c - a*d;
-
-  // var denom = 1 + Math.pow(a1, 2) + Math.pow(a2, 2) + 2 * (a1 + a1 * a2) * cos + a2 * cos2;
-  // var real  = (b0 * a1 + b1 + b1 * a2 + b2 * a1) * cos + (b0 * a2 + b2) * cos2 + (b0 + b1 * a1 + b2 * a2);
-  // var img   = (b0 * a1 - b1 + b1 * a2 - b2 * a1) * sin + (b0 * a2 - b2) * sin2;
-
+  var denom = 1 + Math.pow(a1, 2) + Math.pow(a2, 2) + 2 * a1 * cos + 2 * a2 * cos2 + 2 * a1 * a2 * cos;
+  var real  = (b0 * a1 + b1 + b1 * a2 + b2 * a1) * cos + (b0 * a2 + b2) * cos2 + (b0 + b1 * a1 + b2 * a2);
+  var img   = (b0 * a1 - b1 + b1 * a2 - b2 * a1) * sin + (b0 * a2 - b2) * sin2;
 
   var arg = Math.atan2(img / denom, real / denom);
 
