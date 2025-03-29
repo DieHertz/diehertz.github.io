@@ -4,80 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Engineering Notes</title>
-  <style>
-    :root {
-      --bg: #272822;
-      --fg: #f8f8f2;
-      --accent: #66d9ef;
-      --card-bg: #3e3d32;
-      --shadow: rgba(0, 0, 0, 0.3);
-    }
-
-    body {
-      font-family: system-ui, sans-serif;
-      margin: 2rem auto;
-      max-width: 900px;
-      padding: 0 1rem;
-      background: var(--bg);
-      color: var(--fg);
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      border-bottom: 2px solid #49483e;
-      padding-bottom: 0.5rem;
-    }
-
-    .about {
-      font-size: 1rem;
-      margin-top: 1rem;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .post {
-      background: var(--card-bg);
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px var(--shadow);
-      transition: transform 0.2s;
-    }
-
-    .post:hover {
-      transform: translateY(-4px);
-    }
-
-    .post h2 {
-      font-size: 1.4rem;
-      margin: 0;
-    }
-
-    .post p {
-      font-size: 0.95rem;
-      margin-top: 0.5rem;
-    }
-
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <header>
@@ -86,9 +14,13 @@
       I'm a systems engineer who enjoys building clean abstractions across simulation infrastructure, data pipelines, and embedded systems. <br>
       This is where I jot down things I'm proud of—or things that taught me something hard-earned.
     </p>
+    <div class="socials">
+      <a href="https://github.com/DieHertz" target="_blank">GitHub</a>
+      <a href="https://linkedin.com/in/diehertz" target="_blank">LinkedIn</a>
+    </div>
   </header>
 
-  <main class="grid">
+  <main class="feed">
     <div class="post">
       <h2><a href="blog/cpp_python_binding_infra.html">Taming C++/Python Bindings in a Monorepo</a></h2>
       <p>How I built a reusable Bazel + pybind11 integration system to simplify C++/Python bindings and solve nasty mixed-linking problems with embedded interpreters.</p>

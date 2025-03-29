@@ -1,0 +1,104 @@
+:root {
+  --bg: #272822;
+  --fg: #f8f8f2;
+  --accent: #f2c066; /* golden-yellow Monokai variant */
+  --card-bg: #3e3d32;
+  --shadow: rgba(0, 0, 0, 0.3);
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  margin: 2rem auto;
+  max-width: 800px;
+  padding: 0 1rem;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  border-bottom: 2px solid #49483e;
+  padding-bottom: 0.5rem;
+}
+
+.about {
+  font-size: 1rem;
+  margin-top: 1rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.socials {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.socials a {
+  margin: 0 0.5rem;
+  color: var(--accent);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.socials a:hover {
+  text-decoration: underline;
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.post {
+  background: var(--card-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px var(--shadow);
+  transition: transform 0.2s;
+}
+
+.post:hover {
+  transform: translateY(-4px);
+}
+
+.post h2 {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.post p {
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code {
+  background-color: #49483e;
+  color: var(--fg);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+pre {
+  background: #49483e;
+  color: var(--fg);
+  padding: 1em;
+  overflow-x: auto;
+  border-radius: 5px;
+}
