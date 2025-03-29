@@ -8,56 +8,74 @@
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-  <h1>Taming C++/Python Bindings in a Monorepo</h1>
+  <header>
+    <h1><a href="../index.html">My Engineering Notes</a></h1>
+    <p class="about">
+      Personal engineering blog documenting hard-earned tools, ideas, and systems design lessons.
+    </p>
+  </header>
 
-  <p>In any Bazel-based C++/Python monorepo, defining pybind11 bindings can quickly become repetitive and error-prone. I noticed engineers repeatedly hand-writing boilerplate Bazel targets, hardcoding module names in <code>PYBIND11_MODULE(...)</code>, and running into linking issues—especially when combining C++ dependencies like Boost, NumPy, and custom shared libraries.</p>
+  <main>
+    <h2>Taming C++/Python Bindings in a Monorepo</h2>
 
-  <h2>The Problem</h2>
-  <p>Without a consistent approach, people reinvented the same glue over and over—introducing bugs, fragility, and wasted time. Embedding Python into C++ applications made things even more brittle due to mixed static/dynamic linking of native libraries.</p>
+    <p>In any Bazel-based C++/Python monorepo, defining pybind11 bindings can quickly become repetitive and error-prone. I noticed engineers repeatedly hand-writing boilerplate Bazel targets, hardcoding module names in <code>PYBIND11_MODULE(...)</code>, and running into linking issues—especially when combining C++ dependencies like Boost, NumPy, and custom shared libraries.</p>
 
-  <h2>The Solution: <code>py_binding</code> + <code>DEFINE_BINDING_MODULE</code></h2>
-  <p>I built a system that lets developers declare a single Bazel rule to define their Python module. It handles all the dependencies (Python, C++, NumPy, Boost) and generates predictable import paths.</p>
+    <h3>The Problem</h3>
+    <p>Without a consistent approach, people reinvented the same glue over and over—introducing bugs, fragility, and wasted time. Embedding Python into C++ applications made things even more brittle due to mixed static/dynamic linking of native libraries.</p>
 
-  <p>Instead of this:</p>
-  <pre><code>pybind11_module(
+    <h3>The Solution: <code>py_binding</code> + <code>DEFINE_BINDING_MODULE</code></h3>
+    <p>I built a system that lets developers declare a single Bazel rule to define their Python module. It handles all the dependencies (Python, C++, NumPy, Boost) and generates predictable import paths.</p>
+
+    <p>Instead of this:</p>
+    <div class="code-block">
+      <pre><code>pybind11_module(
     name = "my_stuff",
     srcs = ["bindings.cpp"],
     deps = [...],
 )</code></pre>
+    </div>
 
-  <p>You just write:</p>
-  <pre><code>py_binding(
+    <p>You just write:</p>
+    <div class="code-block">
+      <pre><code>py_binding(
     name = "my_stuff",
     srcs = ["bindings.cpp"],
     py_srcs = ["__init__.py"],
 )</code></pre>
+    </div>
 
-  <p>The macro <code>DEFINE_BINDING_MODULE</code> replaces <code>PYBIND11_MODULE</code> and uses Bazel target metadata to set the module name automatically (dots and other invalid characters are sanitized), reducing duplication and making renames safe:</p>
+    <p>The macro <code>DEFINE_BINDING_MODULE</code> replaces <code>PYBIND11_MODULE</code> and uses Bazel target metadata to set the module name automatically (dots and other invalid characters are sanitized), reducing duplication and making renames safe:</p>
 
-  <pre><code>DEFINE_BINDING_MODULE(my_stuff) {
+    <div class="code-block">
+      <pre><code>DEFINE_BINDING_MODULE(my_stuff) {
     // binding logic here
 }</code></pre>
+    </div>
 
-  <h2>Embedded Python & Mixed Linking</h2>
-  <p>One of the trickiest problems was with embedded Python: if a statically linked native lib is also loaded dynamically by a pybind11 module, things break.</p>
+    <h3>Embedded Python & Mixed Linking</h3>
+    <p>One of the trickiest problems was with embedded Python: if a statically linked native lib is also loaded dynamically by a pybind11 module, things break.</p>
 
-  <p>To solve this, I added support for "embedded" variants of the modules. These take precedence over the dynamically loaded ones via logic in the generated <code>.py</code> file. This approach resolved crashes and symbol conflicts in complex applications.</p>
+    <p>To solve this, I added support for "embedded" variants of the modules. These take precedence over the dynamically loaded ones via logic in the generated <code>.py</code> file. This approach resolved crashes and symbol conflicts in complex applications.</p>
 
-  <p>Each embedded module is generated with a name like <code>embedded_my_stuff</code>, and the <code>.py</code> file resolves which version is available:</p>
-
-  <pre><code># bindings/my_stuff.py
-try:
+    <div class="code-block">
+      <pre><code>try:
     from embedded_my_stuff import *
 except ImportError:
     from .my_stuff import *
 </code></pre>
+    </div>
 
-  <p>The setup relies on Bazel-based code generation to automate this logic, ensuring a consistent experience across targets.</p>
+    <p>The setup relies on Bazel-based code generation to automate this logic, ensuring a consistent experience across targets.</p>
 
-  <h2>Future Vision</h2>
-  <p>My longer-term plan was to introduce custom Bazel rules (<code>cc_binary</code>, <code>py_binary</code>) that would propagate binding metadata to the final binary and control linking strategy automatically. Even without full automation, this setup made embedding safer and far more predictable.</p>
+    <h3>Future Vision</h3>
+    <p>My longer-term plan was to introduce custom Bazel rules (<code>cc_binary</code>, <code>py_binary</code>) that would propagate binding metadata to the final binary and control linking strategy automatically. Even without full automation, this setup made embedding safer and far more predictable.</p>
 
-  <h2>Conclusion</h2>
-  <p>This system turned out to be a quiet enabler. Developers stopped tripping over edge cases, reuse increased, and many hard-to-debug crashes simply disappeared. And while it’s not open-sourced, I wanted to share the story—it might resonate with others solving similar problems in large, mixed-language codebases.</p>
+    <h3>Conclusion</h3>
+    <p>This system turned out to be a quiet enabler. Developers stopped tripping over edge cases, reuse increased, and many hard-to-debug crashes simply disappeared. And while it’s not open-sourced, I wanted to share the story—it might resonate with others solving similar problems in large, mixed-language codebases.</p>
+  </main>
+
+  <footer style="text-align:center; margin-top: 3rem; font-size: 0.9rem; color: #aaa;">
+    <p>&copy; 2025 DieHertz. Built with care and gold ink on dark parchment.</p>
+  </footer>
 </body>
 </html>

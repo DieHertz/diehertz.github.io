@@ -1,9 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
+
 :root {
   --bg: #272822;
   --fg: #f8f8f2;
-  --accent: #f2c066; /* golden-yellow Monokai variant */
+  --accent: #f2c066;
   --card-bg: #3e3d32;
   --shadow: rgba(0, 0, 0, 0.3);
+  --code-shadow: rgba(0, 0, 0, 0.4);
+  --code-label: #99936c;
 }
 
 body {
@@ -89,16 +93,45 @@ a:hover {
 
 code {
   background-color: #49483e;
-  color: var(--fg);
+  color: var(--accent);
   padding: 0.2em 0.4em;
   border-radius: 4px;
   font-size: 0.95em;
+  font-family: "Fira Code", monospace;
+  box-shadow: 0 1px 3px var(--code-shadow);
 }
 
 pre {
   background: #49483e;
-  color: var(--fg);
+  color: var(--accent);
   padding: 1em;
   overflow-x: auto;
   border-radius: 5px;
+  font-family: "Fira Code", monospace;
+  font-size: 0.95em;
+  line-height: 1.5;
+  box-shadow: 0 4px 12px var(--code-shadow);
+  border: 1px solid #3a3930;
+  margin-top: 0;
+}
+
+pre code {
+  color: var(--accent);
+}
+
+.code-block {
+  margin: 1.5em 0;
+}
+
+.code-label {
+  font-family: "Fira Code", monospace;
+  font-size: 0.8rem;
+  color: #ccc;
+  background-color: #3a3930;
+  padding: 0.3em 0.6em;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border: 1px solid #3a3930;
+  border-bottom: none;
+  display: inline-block;
 }
