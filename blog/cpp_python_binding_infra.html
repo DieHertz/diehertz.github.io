@@ -28,11 +28,15 @@
 
     <p>Instead of this:</p>
     <div class="code-block">
-      <pre><code>pybind11_module(
-    name = "my_stuff",
+      <pre><code>cc_binary(
+    name = "my_stuff.so",  # have to get the name right or Python won't be able to load it
     srcs = ["bindings.cpp"],
     deps = [...],
-)</code></pre>
+    linkshared = True,
+    visibility = ["//visibility:public"],
+    copts = ["-fPIC"],
+)
+</code></pre>
     </div>
 
     <p>You just write:</p>
