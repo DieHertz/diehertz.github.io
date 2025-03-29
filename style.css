@@ -6,7 +6,7 @@
   --accent: #f2c066;
   --card-bg: #3e3d32;
   --shadow: rgba(0, 0, 0, 0.3);
-  --code-shadow: rgba(0, 0, 0, 0.4);
+  --code-shadow: rgba(0, 0, 0, 0.2); /* More subtle shadow */
   --code-label: #99936c;
 }
 
@@ -98,7 +98,7 @@ code {
   border-radius: 4px;
   font-size: 0.95em;
   font-family: "Fira Code", monospace;
-  box-shadow: 0 1px 3px var(--code-shadow);
+  box-shadow: 0 1px 2px var(--code-shadow); /* More subtle shadow */
 }
 
 pre {
@@ -110,7 +110,7 @@ pre {
   font-family: "Fira Code", monospace;
   font-size: 0.95em;
   line-height: 1.5;
-  box-shadow: 0 4px 12px var(--code-shadow);
+  box-shadow: 0 2px 6px var(--code-shadow); /* Softer shadow */
   border: 1px solid #3a3930;
   margin-top: 0;
 }
