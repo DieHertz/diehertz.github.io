@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taming C++/Python Bindings in a Monorepo</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2rem auto;
+      max-width: 700px;
+      line-height: 1.6;
+    }
+    h1, h2, h3 {
+      line-height: 1.2;
+    }
+    code {
+      background-color: #f3f3f3;
+      padding: 0.2em 0.4em;
+      border-radius: 4px;
+      font-size: 0.95em;
+    }
+    pre {
+      background: #f9f9f9;
+      padding: 1em;
+      overflow-x: auto;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Taming C++/Python Bindings in a Monorepo</h1>
+
+  <p>In any Bazel-based C++/Python monorepo, defining pybind11 bindings can quickly become repetitive and error-prone. I noticed engineers repeatedly hand-writing boilerplate Bazel targets, hardcoding module names in <code>PYBIND11_MODULE(...)</code>, and running into linking issues—especially when combining C++ dependencies like Boost, NumPy, and custom shared libraries.</p>
+
+  <h2>The Problem</h2>
+  <p>Without a consistent approach, people reinvented the same glue over and over—introducing bugs, fragility, and wasted time. Embedding Python into C++ applications made things even more brittle due to mixed static/dynamic linking of native libraries.</p>
+
+  <h2>The Solution: <code>py_binding</code> + <code>PYBIND11_EMBED_MODULE</code></h2>
+  <p>I built a system that lets developers declare a single Bazel rule to define their Python module. It handles all the dependencies (Python, C++, NumPy, Boost) and generates predictable import paths.</p>
+
+  <p>The macro <code>PYBIND11_EMBED_MODULE</code> wraps pybind11’s registration and avoids having to manually set the module name. It aligns with the Bazel target name, simplifying reuse.</p>
+
+  <h2>Embedded Python & Mixed Linking</h2>
+  <p>One of the trickiest problems was with embedded Python: if a statically linked native lib is also loaded dynamically by a pybind11 module, things break.</p>
+
+  <p>To solve this, I added support for "embedded" variants of the modules. These take precedence over the dynamically loaded ones via logic in the generated <code>.py</code> file. This approach resolved crashes and symbol conflicts in complex applications.</p>
+
+  <h2>Future Vision</h2>
+  <p>My longer-term plan was to introduce custom Bazel rules (<code>cc_binary</code>, <code>py_binary</code>) that would propagate binding metadata to the final binary and control linking strategy automatically. Even without full automation, this setup made embedding safer and far more predictable.</p>
+
+  <h2>Conclusion</h2>
+  <p>This system turned out to be a quiet enabler. Developers stopped tripping over edge cases, reuse increased, and many hard-to-debug crashes simply disappeared. And while it’s not open-sourced, I wanted to share the story—it might resonate with others solving similar problems in large, mixed-language codebases.</p>
+</body>
+</html>
