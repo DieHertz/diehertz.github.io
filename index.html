@@ -3,53 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Taming C++/Python Bindings in a Monorepo</title>
+  <title>My Engineering Notes</title>
   <style>
+    :root {
+      --bg: #272822;
+      --fg: #f8f8f2;
+      --accent: #66d9ef;
+      --card-bg: #3e3d32;
+      --shadow: rgba(0, 0, 0, 0.3);
+    }
+
     body {
-      font-family: sans-serif;
+      font-family: system-ui, sans-serif;
       margin: 2rem auto;
+      max-width: 900px;
+      padding: 0 1rem;
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      border-bottom: 2px solid #49483e;
+      padding-bottom: 0.5rem;
+    }
+
+    .about {
+      font-size: 1rem;
+      margin-top: 1rem;
       max-width: 700px;
-      line-height: 1.6;
+      margin-left: auto;
+      margin-right: auto;
     }
-    h1, h2, h3 {
-      line-height: 1.2;
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
     }
-    code {
-      background-color: #f3f3f3;
-      padding: 0.2em 0.4em;
-      border-radius: 4px;
-      font-size: 0.95em;
+
+    .post {
+      background: var(--card-bg);
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px var(--shadow);
+      transition: transform 0.2s;
     }
-    pre {
-      background: #f9f9f9;
-      padding: 1em;
-      overflow-x: auto;
-      border-radius: 5px;
+
+    .post:hover {
+      transform: translateY(-4px);
+    }
+
+    .post h2 {
+      font-size: 1.4rem;
+      margin: 0;
+    }
+
+    .post p {
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <h1>Taming C++/Python Bindings in a Monorepo</h1>
+  <header>
+    <h1>My Engineering Notes</h1>
+    <p class="about">
+      I'm a systems engineer who enjoys building clean abstractions across simulation infrastructure, data pipelines, and embedded systems. <br>
+      This is where I jot down things I'm proud of—or things that taught me something hard-earned.
+    </p>
+  </header>
 
-  <p>In any Bazel-based C++/Python monorepo, defining pybind11 bindings can quickly become repetitive and error-prone. I noticed engineers repeatedly hand-writing boilerplate Bazel targets, hardcoding module names in <code>PYBIND11_MODULE(...)</code>, and running into linking issues—especially when combining C++ dependencies like Boost, NumPy, and custom shared libraries.</p>
+  <main class="grid">
+    <div class="post">
+      <h2><a href="blog/cpp_python_binding_infra.html">Taming C++/Python Bindings in a Monorepo</a></h2>
+      <p>How I built a reusable Bazel + pybind11 integration system to simplify C++/Python bindings and solve nasty mixed-linking problems with embedded interpreters.</p>
+    </div>
 
-  <h2>The Problem</h2>
-  <p>Without a consistent approach, people reinvented the same glue over and over—introducing bugs, fragility, and wasted time. Embedding Python into C++ applications made things even more brittle due to mixed static/dynamic linking of native libraries.</p>
-
-  <h2>The Solution: <code>py_binding</code> + <code>PYBIND11_EMBED_MODULE</code></h2>
-  <p>I built a system that lets developers declare a single Bazel rule to define their Python module. It handles all the dependencies (Python, C++, NumPy, Boost) and generates predictable import paths.</p>
-
-  <p>The macro <code>PYBIND11_EMBED_MODULE</code> wraps pybind11’s registration and avoids having to manually set the module name. It aligns with the Bazel target name, simplifying reuse.</p>
-
-  <h2>Embedded Python & Mixed Linking</h2>
-  <p>One of the trickiest problems was with embedded Python: if a statically linked native lib is also loaded dynamically by a pybind11 module, things break.</p>
-
-  <p>To solve this, I added support for "embedded" variants of the modules. These take precedence over the dynamically loaded ones via logic in the generated <code>.py</code> file. This approach resolved crashes and symbol conflicts in complex applications.</p>
-
-  <h2>Future Vision</h2>
-  <p>My longer-term plan was to introduce custom Bazel rules (<code>cc_binary</code>, <code>py_binary</code>) that would propagate binding metadata to the final binary and control linking strategy automatically. Even without full automation, this setup made embedding safer and far more predictable.</p>
-
-  <h2>Conclusion</h2>
-  <p>This system turned out to be a quiet enabler. Developers stopped tripping over edge cases, reuse increased, and many hard-to-debug crashes simply disappeared. And while it’s not open-sourced, I wanted to share the story—it might resonate with others solving similar problems in large, mixed-language codebases.</p>
+    <!-- Example placeholder for future post -->
+    <div class="post">
+      <h2><a href="#">Coming soon: Visualizing Motion Planning with ST-Plotter</a></h2>
+      <p>How a personal debugging tool became essential to an entire team—and a surprising ML feature source.</p>
+    </div>
+  </main>
 </body>
 </html>
